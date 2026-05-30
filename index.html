@@ -227,6 +227,117 @@
             border: 1px solid rgba(255, 204, 0, 0.2);
         }
 
+        /* Lantern Hanging Section */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            border: 1px dashed rgba(255, 204, 0, 0.5);
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .tree-string {
+            position: absolute;
+            top: 25%;
+            left: -5%;
+            width: 110%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            transform: rotate(2deg);
+            z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .snap-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ffcc00;
+            border-radius: 50%;
+            top: -6px;
+            z-index: 0;
+            box-shadow: 0 0 10px #ffcc00;
+        }
+        .sp-1 { left: 25%; }
+        .sp-2 { left: 50%; }
+        .sp-3 { left: 75%; }
+
+        .lantern-item {
+            position: absolute;
+            bottom: 20px;
+            width: 40px;
+            height: 60px;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 10px 10px 15px 15px;
+            cursor: grab;
+            z-index: 10;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 5px 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+        .lantern-item:active { cursor: grabbing; }
+
+        .l-red { background: linear-gradient(135deg, #ff3366, #b3002d); left: 20%; }
+        .l-yellow { background: linear-gradient(135deg, #ffcc00, #b38f00); left: 50%; transform: translateX(-50%); }
+        .l-blue { background: linear-gradient(135deg, #3399ff, #0059b3); right: 20%; }
+
+        .lantern-item::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 12px;
+            background: #fff;
+        }
+        .lantern-item::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border-left: 1px solid rgba(255,255,255,0.8);
+            border-right: 1px solid rgba(255,255,255,0.8);
+            border-bottom: none;
+            border-top: none;
+            background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.5) 4px, rgba(255,255,255,0.5) 5px);
+        }
+
+        .lantern-item.hung {
+            animation: swing 3s ease-in-out infinite alternate;
+            transform-origin: top center;
+        }
+        
+        .l-red.hung { box-shadow: 0 0 30px #ff3366, inset 0 0 15px #ff99aa; border-color: #ff99aa; }
+        .l-yellow.hung { box-shadow: 0 0 30px #ffcc00, inset 0 0 15px #ffeeaa; border-color: #ffeeaa; }
+        .l-blue.hung { box-shadow: 0 0 30px #3399ff, inset 0 0 15px #99ccff; border-color: #99ccff; }
+
+        @keyframes swing {
+            0% { transform: rotate(-8deg); }
+            100% { transform: rotate(8deg); }
+        }
+
+        .lantern-success {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: #ffcc00;
+            font-size: 1.2em;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 1s;
+            pointer-events: none;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+        .lantern-success.show { opacity: 1; }
+
         /* පහන් පූජාව (Lamp Offering) Styles */
         .interaction-container {
             position: relative;
@@ -538,6 +649,30 @@
         </div>
     </section>
 
+    <!-- Section 6: Hang Lanterns -->
+    <section id="hang-lanterns" class="section">
+        <div class="card reveal">
+            <h2 class="gradient-text">වෙසක් කූඩු එල්ලමු</h2>
+            <p>පහත ඇති වෙසක් කූඩු ඇදගෙන ගොස් නූලේ එල්ලන්න.</p>
+            
+            <div class="tree-container" id="tree-container">
+                <div class="instruction-text" id="lantern-instruction">කූඩුව (Lantern) ඇදගෙන නූලේ ඇති ලකුණු (Dots) වෙත ගෙන එන්න</div>
+                
+                <div class="tree-string">
+                    <div class="snap-point sp-1" data-id="1"></div>
+                    <div class="snap-point sp-2" data-id="2"></div>
+                    <div class="snap-point sp-3" data-id="3"></div>
+                </div>
+
+                <div class="lantern-item l-red" id="lan-1"></div>
+                <div class="lantern-item l-yellow" id="lan-2"></div>
+                <div class="lantern-item l-blue" id="lan-3"></div>
+
+                <div class="lantern-success" id="lantern-success">ලස්සනයි! සාධු! සාධු! 🏮</div>
+            </div>
+        </div>
+    </section>
+
     <!-- Scroll Reveal JS -->
     <script>
         function reveal() {
@@ -572,12 +707,16 @@
             let clientX = e.clientX || (e.touches && e.touches[0].clientX);
             let clientY = e.clientY || (e.touches && e.touches[0].clientY);
             
-            let rect = candle.getBoundingClientRect();
-            offsetX = clientX - rect.left;
-            offsetY = clientY - rect.top;
+            // Center the candle on the mouse pointer
+            offsetX = candle.offsetWidth / 2;
+            offsetY = candle.offsetHeight / 2;
 
             candle.style.position = 'fixed';
             candle.style.zIndex = '1000';
+            candle.style.right = 'auto';
+            candle.style.bottom = 'auto';
+            candle.style.left = (clientX - offsetX) + 'px';
+            candle.style.top = (clientY - offsetY) + 'px';
             
             // Prevent default behavior to avoid scrolling while dragging on mobile
             if(e.type === 'touchstart') e.preventDefault();
@@ -592,8 +731,6 @@
             
             candle.style.left = (clientX - offsetX) + 'px';
             candle.style.top = (clientY - offsetY) + 'px';
-            candle.style.bottom = 'auto';
-            candle.style.right = 'auto';
 
             checkIntersection();
         }
@@ -651,6 +788,127 @@
         candle.addEventListener('touchstart', startDrag, {passive: false});
         document.addEventListener('touchmove', drag, {passive: false});
         document.addEventListener('touchend', endDrag);
+
+        // --- Lantern Drag and Drop Logic ---
+        const lanterns = document.querySelectorAll('.lantern-item');
+        const snapPoints = document.querySelectorAll('.snap-point');
+        let activeLantern = null;
+        let l_offsetX = 0, l_offsetY = 0;
+        let hungCount = 0;
+
+        lanterns.forEach(lan => {
+            lan.addEventListener('mousedown', startLanDrag);
+            lan.addEventListener('touchstart', startLanDrag, {passive: false});
+        });
+
+        document.addEventListener('mousemove', dragLan);
+        document.addEventListener('touchmove', dragLan, {passive: false});
+        document.addEventListener('mouseup', endLanDrag);
+        document.addEventListener('touchend', endLanDrag);
+
+        function startLanDrag(e) {
+            if(e.target.classList.contains('hung')) return; // Already hung
+            if(!e.target.classList.contains('lantern-item')) return;
+            activeLantern = e.target;
+            
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            l_offsetX = activeLantern.offsetWidth / 2;
+            l_offsetY = 10; // Grab near the top thread for better snapping feel
+
+            activeLantern.style.position = 'fixed';
+            activeLantern.style.zIndex = '1000';
+            activeLantern.style.transition = 'none'; // disable CSS transition while dragging
+            activeLantern.style.left = (clientX - l_offsetX) + 'px';
+            activeLantern.style.top = (clientY - l_offsetY) + 'px';
+            activeLantern.style.bottom = 'auto';
+            activeLantern.style.right = 'auto';
+            activeLantern.style.transform = 'none';
+            
+            if(e.type === 'touchstart') e.preventDefault();
+        }
+
+        function dragLan(e) {
+            if (!activeLantern) return;
+            e.preventDefault();
+            
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            activeLantern.style.left = (clientX - l_offsetX) + 'px';
+            activeLantern.style.top = (clientY - l_offsetY) + 'px';
+        }
+
+        function endLanDrag(e) {
+            if (!activeLantern) return;
+            
+            let lanRect = activeLantern.getBoundingClientRect();
+            let lanTopX = lanRect.left + (lanRect.width / 2);
+            let lanTopY = lanRect.top; // The top thread of the lantern
+
+            let snapped = false;
+
+            snapPoints.forEach(sp => {
+                if(sp.dataset.occupied) return; 
+                
+                let spRect = sp.getBoundingClientRect();
+                let spCenterX = spRect.left + (spRect.width / 2);
+                let spCenterY = spRect.top + (spRect.height / 2);
+
+                let distance = Math.sqrt(Math.pow(lanTopX - spCenterX, 2) + Math.pow(lanTopY - spCenterY, 2));
+
+                if (distance < 50) {
+                    snapped = true;
+                    sp.dataset.occupied = "true";
+                    activeLantern.classList.add('hung');
+                    
+                    let contRect = document.getElementById('tree-container').getBoundingClientRect();
+                    
+                    activeLantern.style.position = 'absolute';
+                    activeLantern.style.transition = 'left 0.5s, top 0.5s';
+                    activeLantern.style.zIndex = '5';
+                    
+                    let relativeLeft = spCenterX - contRect.left;
+                    let relativeTop = spCenterY - contRect.top;
+
+                    activeLantern.style.left = (relativeLeft - 20) + 'px'; // 20 is half width
+                    activeLantern.style.top = relativeTop + 'px';
+
+                    hungCount++;
+                    if(hungCount === 3) {
+                        document.getElementById('lantern-instruction').style.display = 'none';
+                        document.getElementById('lantern-success').classList.add('show');
+                    }
+                }
+            });
+
+            if (!snapped) {
+                // Return to original position
+                activeLantern.style.position = 'absolute';
+                activeLantern.style.transition = 'all 0.5s';
+                activeLantern.style.top = 'auto';
+                activeLantern.style.bottom = '20px';
+                
+                if(activeLantern.classList.contains('l-red')) {
+                    activeLantern.style.left = '20%';
+                    activeLantern.style.right = 'auto';
+                    activeLantern.style.transform = 'none';
+                }
+                if(activeLantern.classList.contains('l-yellow')) {
+                    activeLantern.style.left = '50%';
+                    activeLantern.style.right = 'auto';
+                    activeLantern.style.transform = 'translateX(-50%)';
+                }
+                if(activeLantern.classList.contains('l-blue')) {
+                    activeLantern.style.left = 'auto';
+                    activeLantern.style.right = '20%';
+                    activeLantern.style.transform = 'none';
+                }
+            }
+
+            activeLantern = null;
+        }
     </script>
 </body>
 </html>
