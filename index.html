@@ -79,6 +79,23 @@
             100% { transform: translateY(-10px); box-shadow: 0 0 35px rgba(255, 204, 0, 0.8), 0 0 70px rgba(255, 153, 0, 0.6); }
         }
 
+        /* සිදුහත් කුමරුගේ පින්තූරය */
+        .siddhartha-img {
+            width: 140px;
+            height: auto;
+            margin: -90px auto 20px;
+            display: block;
+            animation: float-siddhartha 4s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 3;
+            filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.6));
+        }
+
+        @keyframes float-siddhartha {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+
         /* පාවෙන ආලෝක බිංදු (Fireflies) */
         .firefly {
             position: fixed; 
@@ -253,6 +270,9 @@
     <!-- Section 2: About Vesak -->
     <section id="about" class="section">
         <div class="card reveal">
+            <!-- සිදුහත් කුමරුගේ පින්තූරය -->
+            <img src="budda.png" alt="Prince Siddhartha" class="siddhartha-img">
+            
             <h2 class="gradient-text">වෙසක් පොහොයේ වැදගත්කම</h2>
             <p>
                 සිදුහත් බෝසතාණන් වහන්සේගේ ඉපදීම,<br>
