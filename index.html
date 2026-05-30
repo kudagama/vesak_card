@@ -227,6 +227,124 @@
             border: 1px solid rgba(255, 204, 0, 0.2);
         }
 
+        /* වෙසක් තොරණ (Vesak Thorana) Styles */
+        .thorana-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 350px;
+            margin: 30px auto 0;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #020111;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .t-center {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            border-radius: 50%;
+        }
+
+        .thorana-petals {
+            width: 450px;
+            height: 450px;
+            background: repeating-conic-gradient(from 0deg, 
+                #ff3366 0deg 10deg, 
+                #ffcc00 10deg 20deg, 
+                #3399ff 20deg 30deg,
+                #00ffcc 30deg 40deg);
+            animation: spin-petals 10s linear infinite;
+            z-index: 1;
+            mask-image: radial-gradient(circle, transparent 30%, black 65%);
+            -webkit-mask-image: radial-gradient(circle, transparent 30%, black 65%);
+        }
+
+        .thorana-outer-ring {
+            width: 300px;
+            height: 300px;
+            border: 12px dotted #fff;
+            animation: flash-outer 0.5s infinite alternate;
+            z-index: 2;
+        }
+
+        .thorana-middle-ring {
+            width: 230px;
+            height: 230px;
+            border: 12px dashed #fff;
+            animation: flash-middle 0.4s infinite alternate-reverse;
+            z-index: 3;
+        }
+
+        .thorana-inner-ring {
+            width: 160px;
+            height: 160px;
+            border: 10px dotted #fff;
+            animation: flash-inner 0.3s infinite alternate;
+            z-index: 4;
+        }
+
+        .thorana-buddha {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            z-index: 10;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+        }
+
+        .thorana-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, #4d2600, #1a0d00);
+            z-index: 15;
+            border-top: 4px solid #ffcc00;
+            box-shadow: 0 -10px 30px rgba(255, 204, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thorana-base-text {
+            color: #fff;
+            font-size: 1.3em;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff3366;
+            animation: color-cycle 2s infinite alternate;
+        }
+
+        @keyframes color-cycle {
+            0% { color: #ffcc00; text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00; }
+            50% { color: #ff3366; text-shadow: 0 0 10px #ff3366, 0 0 20px #ff3366; }
+            100% { color: #3399ff; text-shadow: 0 0 10px #3399ff, 0 0 20px #3399ff; }
+        }
+
+        @keyframes spin-petals {
+            0% { transform: translate(-50%, 50%) rotate(0deg); }
+            100% { transform: translate(-50%, 50%) rotate(360deg); }
+        }
+
+        @keyframes flash-outer {
+            0% { border-color: #ff3366; box-shadow: 0 0 20px #ff3366, inset 0 0 20px #ff3366; }
+            100% { border-color: #3399ff; box-shadow: 0 0 30px #3399ff, inset 0 0 30px #3399ff; }
+        }
+        @keyframes flash-middle {
+            0% { border-color: #ffcc00; box-shadow: 0 0 15px #ffcc00, inset 0 0 15px #ffcc00; }
+            100% { border-color: #00ffcc; box-shadow: 0 0 25px #00ffcc, inset 0 0 25px #00ffcc; }
+        }
+        @keyframes flash-inner {
+            0% { border-color: #ff00ff; box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff; }
+            100% { border-color: #ffff00; box-shadow: 0 0 20px #ffff00, inset 0 0 20px #ffff00; }
+        }
+
         /* Lantern Hanging Section */
         .tree-container {
             position: relative;
@@ -669,6 +787,27 @@
                 <div class="lantern-item l-blue" id="lan-3"></div>
 
                 <div class="lantern-success" id="lantern-success">ලස්සනයි! සාධු! සාධු! 🏮</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Thorana -->
+    <section id="thorana" class="section">
+        <div class="card reveal" style="max-width: 600px; padding: 40px 20px;">
+            <h2 class="gradient-text">වෙසක් තොරණ</h2>
+            <p>විදුලි බුබුළු සහ ආලෝක රටා වලින් සරසන ලද අලංකාර වෙසක් තොරණ</p>
+            
+            <div class="thorana-wrapper">
+                <div class="t-center thorana-petals"></div>
+                <div class="t-center thorana-outer-ring"></div>
+                <div class="t-center thorana-middle-ring"></div>
+                <div class="t-center thorana-inner-ring"></div>
+                
+                <img src="sitting_buddha.png" alt="Buddha in Thorana" class="thorana-buddha">
+                
+                <div class="thorana-base">
+                    <span class="thorana-base-text">සාධු! සාධු! සාධු!</span>
+                </div>
             </div>
         </div>
     </section>
