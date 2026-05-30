@@ -229,6 +229,36 @@
 
         /* (Removed old CSS Thorana styles) */
 
+        /* Audio Control Styles */
+        .audio-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ffcc00;
+            color: #ffcc00;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .audio-control:hover {
+            background: rgba(255, 204, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .audio-icon {
+            font-size: 1.2em;
+        }
+
         /* Animated Thorana Border */
         .thorana-frame {
             position: relative;
@@ -286,6 +316,95 @@
         @keyframes rotate-frame {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* දන්සල (Dansala) Styles */
+        .dansala-container {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 2px dashed rgba(255, 204, 0, 0.4);
+            margin-top: 20px;
+        }
+
+        .dansala-btn {
+            background: linear-gradient(45deg, #ff3366, #ff9900);
+            border: none;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
+            font-family: 'Abhaya Libre', serif;
+        }
+        .dansala-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6);
+        }
+
+        .ice-cream-wrapper {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+            cursor: pointer;
+            animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+        }
+
+        .ice-cream-wrapper.active {
+            display: flex;
+        }
+
+        .ic-top {
+            width: 110px;
+            height: 110px;
+            background: repeating-radial-gradient(circle at 35% 35%, #ffffff, #ffccff 10%, #ff6699 60%);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            transition: clip-path 0.3s, transform 0.5s, opacity 0.5s;
+        }
+
+        .ic-cone-real {
+            width: 90px;
+            height: 140px;
+            background: #e69900;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(153, 102, 0, 0.5) 10px, rgba(153, 102, 0, 0.5) 12px),
+                repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(153, 102, 0, 0.5) 10px, rgba(153, 102, 0, 0.5) 12px);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            margin-top: -25px;
+            z-index: 1;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        @keyframes pop-in {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .bite-1 { clip-path: polygon(0 0, 50% 0, 50% 25%, 75% 10%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 50% 50%; }
+        .bite-2 { clip-path: polygon(0 50%, 25% 35%, 45% 60%, 75% 40%, 100% 80%, 100% 100%, 0 100%); border-radius: 0 0 50% 50%; }
+        .bite-3 { transform: scale(0); opacity: 0; }
+
+        .dansala-msg {
+            font-size: 1.6em;
+            color: #ffcc00;
+            margin-top: 20px;
+            display: none;
+            font-weight: bold;
+            animation: fade-in 1s forwards;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Lantern Hanging Section */
@@ -668,7 +787,18 @@
     </style>
 </head>
 <body>
-    <!-- පසුබිම් වීඩියෝව -->
+    <!-- Audio Element -->
+    <audio id="bg-music" autoplay loop>
+        <source src="SAKALA_SATHAMA.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Audio Control -->
+    <div class="audio-control" id="audio-toggle">
+        <span class="audio-icon">🔇</span>
+        <span>ගීතය</span>
+    </div>
+
+    <!-- Night Sky Background -->
     <video class="bg-video" src="lantern2.mp4" autoplay loop muted playsinline></video>
 
     <!-- පසුබිමේ හඳ (Fixed to background) -->
@@ -824,8 +954,80 @@
         </div>
     </section>
 
+    <!-- Section 8: Dansala -->
+    <section id="dansala-section" class="section">
+        <div class="card reveal" style="max-width: 600px; padding: 40px 20px;">
+            <h2 class="gradient-text">ඩිජිටල් අයිස්ක්‍රීම් දන්සල</h2>
+            <p>බොදු බැතියෙන් පිරිනමන සිසිල් අයිස්ක්‍රීම් දන්සලට ඔබත් සහභාගී වන්න.</p>
+            
+            <div class="dansala-container">
+                <button class="dansala-btn" id="get-icecream-btn">අයිස්ක්‍රීම් එකක් ගන්න 🍦</button>
+                
+                <div class="ice-cream-wrapper" id="ic-wrapper">
+                    <p style="color: #fff; margin-bottom: 10px; font-size: 0.9em; opacity: 0.7;">කන්න මෙතන Click කරන්න 👇</p>
+                    <div class="ic-top" id="ic-scoop"></div>
+                    <div class="ic-cone-real" id="ic-cone"></div>
+                </div>
+                
+                <div class="dansala-msg" id="dansala-msg">
+                    දන්සලට සහභාගී වුණ ඔබට පිං! 🙏
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Scroll Reveal JS -->
     <script>
+        // --- Audio Control Logic ---
+        const bgMusic = document.getElementById('bg-music');
+        const audioToggle = document.getElementById('audio-toggle');
+        const audioIcon = audioToggle.querySelector('.audio-icon');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                audioIcon.textContent = '🔇';
+            } else {
+                bgMusic.play().then(() => {
+                    audioIcon.textContent = '🔊';
+                }).catch(e => console.log("Audio play failed:", e));
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        // Try to play immediately on load
+        window.addEventListener('DOMContentLoaded', () => {
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                audioIcon.textContent = '🔊';
+            }).catch(e => {
+                // Autoplay blocked by browser policy; wait for interaction
+                console.log("Autoplay prevented:", e);
+            });
+        });
+
+        audioToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering body click
+            toggleMusic();
+        });
+
+        // Try to play on first interaction (required by browsers)
+        document.body.addEventListener('click', function playOnInteraction() {
+            if (!isMusicPlaying) {
+                toggleMusic();
+            }
+            document.body.removeEventListener('click', playOnInteraction);
+        }, { once: true });
+        
+        document.body.addEventListener('touchstart', function playOnTouch() {
+            if (!isMusicPlaying) {
+                toggleMusic();
+            }
+            document.body.removeEventListener('touchstart', playOnTouch);
+        }, { once: true, passive: true });
+
+        // --- Reveal Logic ---
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -1062,6 +1264,50 @@
 
             activeLantern = null;
         }
+
+        // --- Dansala Logic ---
+        const getIcBtn = document.getElementById('get-icecream-btn');
+        const icWrapper = document.getElementById('ic-wrapper');
+        const icScoop = document.getElementById('ic-scoop');
+        const icCone = document.getElementById('ic-cone');
+        const dansalaMsg = document.getElementById('dansala-msg');
+        let biteCount = 0;
+
+        getIcBtn.addEventListener('click', () => {
+            getIcBtn.style.display = 'none';
+            icWrapper.classList.add('active');
+            dansalaMsg.style.display = 'none';
+            
+            // Reset state
+            biteCount = 0;
+            icScoop.className = 'ic-top';
+            icCone.style.transform = 'scale(1)';
+            icCone.style.opacity = '1';
+            icWrapper.style.transform = 'scale(1)';
+        });
+
+        icWrapper.addEventListener('click', () => {
+            biteCount++;
+            if (biteCount === 1) {
+                icScoop.classList.add('bite-1');
+            } else if (biteCount === 2) {
+                icScoop.classList.add('bite-2');
+            } else if (biteCount === 3) {
+                icScoop.classList.add('bite-3'); // Scoop shrinks/disappears
+            } else if (biteCount === 4) {
+                icCone.style.transform = 'scale(0)'; // Cone disappears
+                icCone.style.opacity = '0';
+                setTimeout(() => {
+                    icWrapper.classList.remove('active');
+                    dansalaMsg.style.display = 'block';
+                    // Show button again after a few seconds
+                    setTimeout(() => {
+                        getIcBtn.textContent = 'තවත් එකක් ගන්න 🍦';
+                        getIcBtn.style.display = 'inline-block';
+                    }, 3000);
+                }, 300);
+            }
+        });
     </script>
 </body>
 </html>
